@@ -21,3 +21,10 @@ class Helper:
     def get_desktop_path():
         return os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
 
+    @staticmethod
+    def get_settings_folder_path():
+        return f"{os.getenv('APPDATA')}/YoutubeDownloader"
+
+    @staticmethod
+    def get_settings_file_path():
+        return f"{os.getenv('APPDATA')}/YoutubeDownloader/settings.json"

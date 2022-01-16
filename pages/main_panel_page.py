@@ -4,12 +4,14 @@ from tkinter import messagebox
 from pages.page import Page
 from pytube import YouTube
 from helper import Helper
+from settings import Settings
 
 
 class MainPanelPage(Page):
     def __init__(self):
         Page.__init__(self)
         self.helper = Helper()
+        self.settings = Settings()
 
         self.show_content()
 
@@ -25,8 +27,11 @@ class MainPanelPage(Page):
 
         self.download_status_label = tk.Label(self, text="Trwa pobieranie, może to chwilę potrwać...", fg="green", font=("Arial", 14))
 
-
     def download_video(self):
+        if not self.check_internet_connection():
+            tk.messagebox.showerror(title="Brak połączenia z internetem", message="Sprawdź swoje połączenie z internetem.")
+            return
+
         try:
             video = YouTube(self.url_video_input.get())
 
@@ -34,14 +39,42 @@ class MainPanelPage(Page):
             self.confirm_button["state"] = "disabled"
             self.update()
 
-            video.streams.get_highest_resolution().download(self.helper.get_download_path())
+            video = self.handle_settings(video)
+
+            video.download(self.settings.directory)
 
             self.confirm_button["state"] = "normal"
             self.download_status_label.place_forget()
             self.update()
 
-            message_box = tk.messagebox.showinfo(title="Pomyślnie pobrano!", message="Wideo zostało pobrane pomyślnie!")
+            tk.messagebox.showinfo(title="Pomyślnie pobrano!", message="Wideo zostało pobrane pomyślnie!")
         except:
-            message_box = tk.messagebox.showinfo(title="Wystąpił błąd", message="Coś poszło nie tak... Sprawdź poprawność linka.")
+            tk.messagebox.showerror(title="Wystąpił błąd", message="Coś poszło nie tak... Sprawdź poprawność linka.")
 
         self.download_status_label.place_forget()
+
+    @staticmethod
+    def check_internet_connection():
+        url = "https://youtube.com"
+        timeout = 5
+        try:
+            request = requests.get(url, timeout=timeout)
+            return True
+        except:
+            return False
+
+    def handle_settings(self, video):
+        video = video.streams
+
+        if self.settings.resolution == "lowest":
+            video = video.get_lowest_resolution()
+        elif self.settings.resolution == "highest":
+            video = video.get_highest_resolution()
+        else:
+            video = video.filter(
+                resolution=self.settings.resolution
+            ).first()
+
+        return video
+
+
