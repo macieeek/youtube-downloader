@@ -2,6 +2,12 @@ import tkinter as tk
 from view import MainView
 
 
+# save settings before close application
+def handle_close_event(window, main_view):
+    main_view.handle_close_event()
+    window.destroy()
+
+
 def main():
     window = tk.Tk()
 
@@ -20,8 +26,8 @@ def main():
     main_view = MainView(window)
     main_view.pack(side="top", fill="both", expand=True)
 
+    window.protocol("WM_DELETE_WINDOW", lambda: handle_close_event(window, main_view))
     window.mainloop()
-
 
 
 

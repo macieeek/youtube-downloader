@@ -1,4 +1,5 @@
 import os
+import requests
 
 
 class Helper:
@@ -28,3 +29,13 @@ class Helper:
     @staticmethod
     def get_settings_file_path():
         return f"{os.getenv('APPDATA')}/YoutubeDownloader/settings.json"
+
+    @staticmethod
+    def check_internet_connection():
+        url = "https://youtube.com"
+        timeout = 5
+        try:
+            request = requests.get(url, timeout=timeout)
+            return True
+        except:
+            return False

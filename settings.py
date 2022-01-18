@@ -12,6 +12,7 @@ class Settings:
         self.directory = settings["directory"]
         self.extension = settings["extension"]
         self.resolution = settings["resolution"]
+        self.type = settings["type"]
 
     def get_settings(self):
         self.check_if_settings_file_is_created()
@@ -29,13 +30,23 @@ class Settings:
             with open(os.path.join(self.helper.get_settings_folder_path(), filename), "w") as settings_file:
                 self.create_default_settings_file(settings_file)
 
-
     def create_default_settings_file(self, settings_file):
         data = {}
         data["extension"] = "mp4"
         data["resolution"] = "lowest"
         data["directory"] = self.helper.get_download_path()
+        data["type"] = "video"
 
         settings_file.write(json.dumps(data))
+
+    def save_settings(self):
+        data = {}
+        data["extension"] = self.extension
+        data["resolution"] = self.resolution
+        data["directory"] = self.directory
+        data["type"] = self.type
+
+        with open(self.helper.get_settings_file_path(), "w") as settings_file:
+            settings_file.write(json.dumps(data))
 
 
