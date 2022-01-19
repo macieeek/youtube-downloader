@@ -32,7 +32,6 @@ class MainPanelPage(Page):
         if not self.helper.check_internet_connection():
             tk.messagebox.showerror(title="Brak połączenia z internetem", message="Sprawdź swoje połączenie z internetem.")
             return
-
         try:
             video = YouTube(self.url_video_input.get())
 
@@ -52,22 +51,21 @@ class MainPanelPage(Page):
         except:
             tk.messagebox.showerror(title="Wystąpił błąd", message="Coś poszło nie tak... Sprawdź poprawność linka.")
 
-        self.download_status_label.place_forget()
-
     def handle_settings(self, video):
         video = video.streams
 
         # selected type is audio
         if self.settings.type == "audio":
             return video.filter(
+                file_extension="mp4",
                 type="audio"
             ).first()
 
         # selected type is video
         if self.settings.resolution == "lowest":
-            video = video.get_lowest_resolution()
+            video = video.filter(file_extension="mp4").order_by("resolution").asc().first()
         elif self.settings.resolution == "highest":
-            video = video.get_highest_resolution()
+            video = video.filter(file_extension="mp4").order_by("resolution").desc().first()
         else:
             video = video.filter(
                 res=self.settings.resolution
