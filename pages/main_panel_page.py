@@ -4,6 +4,7 @@ from tkinter import messagebox
 from pages.page import Page
 from pytube import YouTube
 from helper import Helper
+import ffmpeg
 
 
 class MainPanelPage(Page):
@@ -44,7 +45,7 @@ class MainPanelPage(Page):
 
             if self.settings.directory == "dekstop": directory = self.helper.get_desktop_path()
             elif self.settings.directory == "downloads": directory = self.helper.get_download_path()
-            elif self.settings.directory == "custom": directory = self.settings.custom_path_directory
+            elif self.settings.directory == "custom": directory = self.settings.custom_directory_path
             else: directory = self.helper.get_desktop_path()
             video.download(directory)
 

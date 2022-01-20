@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import filedialog
 from pages.page import Page
 from helper import Helper
 
@@ -23,10 +23,7 @@ class SettingsPage(Page):
         self.show_resolution_options()
         self.show_extension_options()
         self.show_directory_options()
-
-        #
-        # custom_directory_label = tk.Label(self, text="Własny katalog pobrania", font=("Arial", 15))
-        # custom_directory_label.place(x=50, y=150)
+        self.show_custom_directory_options()
 
     def show_type_options(self):
         labelframe_type_widget = tk.LabelFrame(self, text="Rodzaj", font=("Arial", 14), width=385, height=60)
@@ -83,7 +80,7 @@ class SettingsPage(Page):
         radio_button_webm.place(x=120, y=1)
 
     def show_directory_options(self):
-        labelframe_directory_widget = tk.LabelFrame(self, text="Rozszerzenie", font=("Arial", 14), width=380, height=60)
+        labelframe_directory_widget = tk.LabelFrame(self, text="Katalog pobrania", font=("Arial", 14), width=425, height=60)
         labelframe_directory_widget.place(x=30, y=220)
 
         global radio_directory_variable
@@ -96,7 +93,7 @@ class SettingsPage(Page):
         radio_button_desktop.place(x=20, y=1)
 
         radio_button_downloads = tk.Radiobutton(labelframe_directory_widget, variable=radio_directory_variable, value="downloads",
-                                          text="Pobrane", font=("Arial", 12),
+                                          text="Folder pobrane", font=("Arial", 12),
                                           command=lambda: self.change_directory_option("downloads"))
         radio_button_downloads.place(x=114, y=1)
 
@@ -104,7 +101,20 @@ class SettingsPage(Page):
                                                 value="custom",
                                                 text="Własny folder", font=("Arial", 12),
                                                 command=lambda: self.change_directory_option("custom"))
-        radio_button_custom.place(x=229, y=1)
+        radio_button_custom.place(x=275, y=1)
+
+    def show_custom_directory_options(self):
+        labelframe_custom_directory_path_widget = tk.LabelFrame(self, text="Ścieżka własnego folderu", font=("Arial", 14), width=455, height=60)
+        labelframe_custom_directory_path_widget.place(x=30, y=290)
+
+        self.path_input = tk.Entry(labelframe_custom_directory_path_widget, font=9)
+        self.path_input.insert(-1, self.settings.custom_directory_path)
+        self.path_input["state"] = "disabled"
+        self.path_input.place(width=325, height=23, x=20, y=3)
+
+        select_path_button = tk.Button(self, text="Wybierz", font=1, width=7, height=1, borderwidth=3, relief="groove",
+                                        command=self.change_custom_path_directory)
+        select_path_button.place(x=387, y=304)
 
 
     def change_type_option(self, value):
@@ -125,3 +135,12 @@ class SettingsPage(Page):
         if value == "downloads": self.settings.directory = "downloads"
         elif value == "desktop": self.settings.directory = "desktop"
         elif value == "custom": self.settings.directory = "custom"
+
+    def change_custom_path_directory(self):
+        path = filedialog.askdirectory()
+        self.path_input["state"] = "normal"
+        self.path_input.delete(0, "end")
+        self.path_input.insert(-1, path)
+        self.path_input["state"] = "disabled"
+
+        self.settings.custom_directory_path = path

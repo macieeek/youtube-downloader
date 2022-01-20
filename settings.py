@@ -2,7 +2,6 @@ import os
 import json
 from helper import Helper
 
-
 class Settings:
     def __init__(self):
         self.helper = Helper()
