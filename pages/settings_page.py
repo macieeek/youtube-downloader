@@ -5,6 +5,7 @@ from helper import Helper
 
 radio_type_variable = ""
 radio_resolution_variable = ""
+radio_extension_variable = ""
 
 
 class SettingsPage(Page):
@@ -18,10 +19,8 @@ class SettingsPage(Page):
     def show_content(self):
         self.show_type_options()
         self.show_resolution_options()
+        self.show_extension_options()
 
-        #
-        # extension_label = tk.Label(self, text="Rozszerzenie pliku", font=("Arial", 15))
-        # extension_label.place(x=50, y=90)
         #
         # directory_label = tk.Label(self, text="Katalog pobrania", font=("Arial", 15))
         # directory_label.place(x=50, y=120)
@@ -30,7 +29,7 @@ class SettingsPage(Page):
         # custom_directory_label.place(x=50, y=150)
 
     def show_type_options(self):
-        labelframe_type_widget = tk.LabelFrame(self, text="Rodzaj pobieranego pliku", font=("Arial", 14), width=385, height=60)
+        labelframe_type_widget = tk.LabelFrame(self, text="Rodzaj", font=("Arial", 14), width=385, height=60)
         labelframe_type_widget.place(x=30, y=10)
 
         global radio_type_variable
@@ -68,6 +67,20 @@ class SettingsPage(Page):
                                                         font=("Arial", 13), command=lambda: self.change_resolution_option("highest"))
         radio_button_highest_resolution.place(x=320, y=1)
 
+    def show_extension_options(self):
+        labelframe_extension_widget = tk.LabelFrame(self, text="Rozszerzenie", font=("Arial", 14), width=230, height=60)
+        labelframe_extension_widget.place(x=30, y=150)
+
+        global radio_extension_variable
+        radio_extension_variable = tk.StringVar()
+        radio_extension_variable.set(self.settings.extension)
+        radio_button_mp4 = tk.Radiobutton(labelframe_extension_widget, variable=radio_extension_variable, value="mp4", text="MP4", font=("Arial", 12),
+                                            command=lambda: self.change_extension_option("mp4"))
+        radio_button_mp4.place(x=20, y=1)
+
+        radio_button_webm = tk.Radiobutton(labelframe_extension_widget, variable=radio_extension_variable, value="webm", text="WEBM", font=("Arial", 12),
+                                            command=lambda: self.change_extension_option("webm"))
+        radio_button_webm.place(x=120, y=1)
 
     def change_type_option(self, value):
         if value == "audio": self.settings.type = "audio"
@@ -78,3 +91,7 @@ class SettingsPage(Page):
         elif value == "360p": self.settings.resolution = "360p"
         elif value == "720p": self.settings.resolution = "720p"
         elif value == "highest": self.settings.resolution = "highest"
+
+    def change_extension_option(self, value):
+        if value == "mp4": self.settings.extension = "mp4"
+        elif value == "webm": self.settings.extension = "webm"

@@ -1,3 +1,4 @@
+import json
 import tkinter as tk
 from tkinter import messagebox
 from pages.page import Page
@@ -57,20 +58,24 @@ class MainPanelPage(Page):
         # selected type is audio
         if self.settings.type == "audio":
             return video.filter(
-                file_extension="mp4",
+                file_extension=self.settings.extension,
                 type="audio"
             ).first()
 
         # selected type is video
         if self.settings.resolution == "lowest":
-            video = video.filter(file_extension="mp4").order_by("resolution").asc().first()
+            video = video.filter(file_extension=self.settings.extension).order_by("resolution").asc().first()
         elif self.settings.resolution == "highest":
-            video = video.filter(file_extension="mp4").order_by("resolution").desc().first()
+            video = video.filter(file_extension=self.settings.extension).order_by("resolution").desc().first()
         else:
+            # check if selected video resolution is higher than available in video
+            test_resolution_video = video.filter(file_extension=self.settings.extension).order_by("resolution").desc().first()
+            if test_resolution_video.resolution < self.settings.resolution:
+                return test_resolution_video
+
             video = video.filter(
-                res=self.settings.resolution
+                res=self.settings.resolution,
+                file_extension=self.settings.extension
             ).first()
 
         return video
-
-
