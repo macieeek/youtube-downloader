@@ -3,9 +3,11 @@ from tkinter import ttk
 from pages.page import Page
 from helper import Helper
 
+# set variables there because of tkinter radio buttons bug
 radio_type_variable = ""
 radio_resolution_variable = ""
 radio_extension_variable = ""
+radio_directory_variable = ""
 
 
 class SettingsPage(Page):
@@ -20,10 +22,8 @@ class SettingsPage(Page):
         self.show_type_options()
         self.show_resolution_options()
         self.show_extension_options()
+        self.show_directory_options()
 
-        #
-        # directory_label = tk.Label(self, text="Katalog pobrania", font=("Arial", 15))
-        # directory_label.place(x=50, y=120)
         #
         # custom_directory_label = tk.Label(self, text="Własny katalog pobrania", font=("Arial", 15))
         # custom_directory_label.place(x=50, y=150)
@@ -82,6 +82,31 @@ class SettingsPage(Page):
                                             command=lambda: self.change_extension_option("webm"))
         radio_button_webm.place(x=120, y=1)
 
+    def show_directory_options(self):
+        labelframe_directory_widget = tk.LabelFrame(self, text="Rozszerzenie", font=("Arial", 14), width=380, height=60)
+        labelframe_directory_widget.place(x=30, y=220)
+
+        global radio_directory_variable
+        radio_directory_variable = tk.StringVar()
+        radio_directory_variable.set(self.settings.directory)
+
+        radio_button_desktop = tk.Radiobutton(labelframe_directory_widget, variable=radio_directory_variable, value="desktop",
+                                           text="Pulpit", font=("Arial", 12),
+                                           command=lambda: self.change_directory_option("desktop"))
+        radio_button_desktop.place(x=20, y=1)
+
+        radio_button_downloads = tk.Radiobutton(labelframe_directory_widget, variable=radio_directory_variable, value="downloads",
+                                          text="Pobrane", font=("Arial", 12),
+                                          command=lambda: self.change_directory_option("downloads"))
+        radio_button_downloads.place(x=114, y=1)
+
+        radio_button_custom = tk.Radiobutton(labelframe_directory_widget, variable=radio_directory_variable,
+                                                value="custom",
+                                                text="Własny folder", font=("Arial", 12),
+                                                command=lambda: self.change_directory_option("custom"))
+        radio_button_custom.place(x=229, y=1)
+
+
     def change_type_option(self, value):
         if value == "audio": self.settings.type = "audio"
         elif value == "video": self.settings.type = "video"
@@ -95,3 +120,8 @@ class SettingsPage(Page):
     def change_extension_option(self, value):
         if value == "mp4": self.settings.extension = "mp4"
         elif value == "webm": self.settings.extension = "webm"
+
+    def change_directory_option(self, value):
+        if value == "downloads": self.settings.directory = "downloads"
+        elif value == "desktop": self.settings.directory = "desktop"
+        elif value == "custom": self.settings.directory = "custom"

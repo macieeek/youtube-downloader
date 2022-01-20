@@ -42,7 +42,11 @@ class MainPanelPage(Page):
 
             video = self.handle_settings(video)
 
-            video.download(self.settings.directory)
+            if self.settings.directory == "dekstop": directory = self.helper.get_desktop_path()
+            elif self.settings.directory == "downloads": directory = self.helper.get_download_path()
+            elif self.settings.directory == "custom": directory = self.settings.custom_path_directory
+            else: directory = self.helper.get_desktop_path()
+            video.download(directory)
 
             self.confirm_button["state"] = "normal"
             self.download_status_label.place_forget()
