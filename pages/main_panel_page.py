@@ -4,7 +4,6 @@ from tkinter import messagebox
 from pages.page import Page
 from pytube import YouTube
 from helper import Helper
-import ffmpeg
 
 
 class MainPanelPage(Page):
@@ -69,16 +68,17 @@ class MainPanelPage(Page):
 
         # selected type is video
         if self.settings.resolution == "lowest":
-            video = video.filter(file_extension=self.settings.extension).order_by("resolution").asc().first()
+            video = video.filter(progressive=True, file_extension=self.settings.extension).order_by("resolution").asc().first()
         elif self.settings.resolution == "highest":
-            video = video.filter(file_extension=self.settings.extension).order_by("resolution").desc().first()
+            video = video.filter(progressive=True, file_extension=self.settings.extension).order_by("resolution").desc().first()
         else:
             # check if selected video resolution is higher than available in video
-            test_resolution_video = video.filter(file_extension=self.settings.extension).order_by("resolution").desc().first()
+            test_resolution_video = video.filter(progressive=True, file_extension=self.settings.extension).order_by("resolution").desc().first()
             if test_resolution_video.resolution < self.settings.resolution:
                 return test_resolution_video
 
             video = video.filter(
+                progressive=True,
                 res=self.settings.resolution,
                 file_extension=self.settings.extension
             ).first()
