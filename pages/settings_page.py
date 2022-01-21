@@ -104,18 +104,17 @@ class SettingsPage(Page):
         radio_button_custom.place(x=275, y=1)
 
     def show_custom_directory_options(self):
-        labelframe_custom_directory_path_widget = tk.LabelFrame(self, text="Ścieżka własnego folderu", font=("Arial", 14), width=455, height=60)
+        labelframe_custom_directory_path_widget = tk.LabelFrame(self, text="Ścieżka własnego folderu", font=("Arial", 14), width=450, height=60)
         labelframe_custom_directory_path_widget.place(x=30, y=290)
 
         self.path_input = tk.Entry(labelframe_custom_directory_path_widget, font=9)
         self.path_input.insert(-1, self.settings.custom_directory_path)
         self.path_input["state"] = "disabled"
-        self.path_input.place(width=325, height=23, x=20, y=3)
+        self.path_input.place(width=319, height=23, x=15, y=3)
 
         select_path_button = tk.Button(self, text="Wybierz", font=1, width=7, height=1, borderwidth=3, relief="groove",
                                         command=self.change_custom_path_directory)
-        select_path_button.place(x=387, y=304)
-
+        select_path_button.place(x=382, y=304)
 
     def change_type_option(self, value):
         if value == "audio": self.settings.type = "audio"

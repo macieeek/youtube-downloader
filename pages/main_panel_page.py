@@ -1,4 +1,3 @@
-import json
 import tkinter as tk
 from tkinter import messagebox
 from pages.page import Page
@@ -14,17 +13,59 @@ class MainPanelPage(Page):
 
         self.show_content()
 
+    def show(self):
+        self.lift()
+        self.show_content()
+
     def show_content(self):
+        self.show_download_content()
+        self.show_selected_options()
+        self.show_last_downloaded_info()
+
+    def show_download_content(self):
         title_label = tk.Label(self, text="Podaj link do wideo na YouTube", font=("Arial", 20))
-        title_label.place(x=60, y=30)
+        title_label.place(x=60, y=10)
 
         self.url_video_input = tk.Entry(self, font=12)
-        self.url_video_input.place(width=390, height=30, x=60, y=80)
+        self.url_video_input.place(width=390, height=30, x=60, y=50)
 
-        self.confirm_button = tk.Button(self, text="Pobierz", font=11, borderwidth=4, relief="groove", command=self.download_video)
-        self.confirm_button.place(y=130, x=196, width=125, height=35)
+        self.confirm_button = tk.Button(self, text="Pobierz", font=11, borderwidth=4, relief="groove",
+                                        command=self.download_video)
+        self.confirm_button.place(x=196, y=95, width=125, height=35)
 
-        self.download_status_label = tk.Label(self, text="Trwa pobieranie, może to chwilę potrwać...", fg="green", font=("Arial", 14))
+        self.download_status_label = tk.Label(self, text="Trwa pobieranie, może to chwilę potrwać...", fg="green",
+                                              font=("Arial", 14))
+
+    def show_selected_options(self):
+        labelframe_selected_options_widget = tk.LabelFrame(self, text="Wybrane ustawienia", font=("Arial", 14), width=225, height=169)
+        labelframe_selected_options_widget.place(x=25, y=185)
+
+        if self.settings.type == "video": type = "Dźwięk oraz wideo"
+        elif self.settings.type == "audio": type = "Tylko dźwięk"
+        label_selected_type = tk.Label(labelframe_selected_options_widget, text=f"Typ: {type}", font=("Arial", 13))
+        label_selected_type.place(x=3, y=12)
+
+        if self.settings.resolution == "lowest": resolution = "Najniższa"
+        elif self.settings.resolution == "360p": resolution = "360p"
+        elif self.settings.resolution == "720p": resolution = "720p"
+        elif self.settings.resolution == "highest": resolution = "Najwyższa"
+        label_selected_resolution = tk.Label(labelframe_selected_options_widget, text=f"Rozdzielczość: {resolution}", font=("Arial", 13))
+        label_selected_resolution.place(x=3, y=40)
+
+        if self.settings.extension == "mp4": extension = "MP4"
+        elif self.settings.extension == "webm": extension = "WEBM"
+        label_selected_extension = tk.Label(labelframe_selected_options_widget, text=f"Rozszerzenie: {extension}", font=("Arial", 13))
+        label_selected_extension.place(x=3, y=68)
+
+        if self.settings.directory == "desktop": directory = "Pulpit"
+        elif self.settings.directory == "downloads": directory = "Folder pobrane"
+        elif self.settings.directory == "custom": directory = "Własny folder"
+        label_selected_directory = tk.Label(labelframe_selected_options_widget, text=f"Ścieżka: {directory}", font=("Arial", 13))
+        label_selected_directory.place(x=3, y=96)
+
+    def show_last_downloaded_info(self):
+        labelframe_last_downloaded_info_widget = tk.LabelFrame(self, text="Ostatnie pobranie", font=("Arial", 14), width=225, height=169)
+        labelframe_last_downloaded_info_widget.place(x=265, y=185)
 
     def download_video(self):
         if len(self.url_video_input.get()) < 3:
@@ -36,7 +77,7 @@ class MainPanelPage(Page):
         try:
             video = YouTube(self.url_video_input.get())
 
-            self.download_status_label.place(y=180, x=78)
+            self.download_status_label.place(x=78, y=143)
             self.confirm_button["state"] = "disabled"
             self.update()
 
