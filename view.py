@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 from pages.main_panel_page import MainPanelPage
 from pages.settings_page import SettingsPage
 from pages.statistics_page import StatisticsPage
@@ -20,7 +19,6 @@ class MainView(tk.Frame):
         self.initialize_content()
 
         self.main_panel_page.show()
-
 
     def initialize_tabs_bar(self):
         tabs_bar = tk.Frame(self)

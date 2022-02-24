@@ -68,33 +68,42 @@ class MainPanelPage(Page):
         labelframe_last_downloaded_info_widget.place(x=265, y=185)
 
     def download_video(self):
-        if len(self.url_video_input.get()) < 3:
+        url_to_video = self.url_video_input.get()
+        if len(url_to_video) < 12:
             return
 
         if not self.helper.check_internet_connection():
             tk.messagebox.showerror(title="Brak połączenia z internetem", message="Sprawdź swoje połączenie z internetem.")
             return
+
         try:
-            video = YouTube(self.url_video_input.get())
+            video = YouTube(url_to_video)
 
             self.download_status_label.place(x=78, y=143)
             self.confirm_button["state"] = "disabled"
             self.update()
 
+            # handle selected settings
             video = self.handle_settings(video)
 
-            if self.settings.directory == "dekstop": directory = self.helper.get_desktop_path()
+            if self.settings.directory == "desktop": directory = self.helper.get_desktop_path()
             elif self.settings.directory == "downloads": directory = self.helper.get_download_path()
             elif self.settings.directory == "custom": directory = self.settings.custom_directory_path
             else: directory = self.helper.get_desktop_path()
+
+            # download video
             video.download(directory)
 
             self.confirm_button["state"] = "normal"
             self.download_status_label.place_forget()
             self.update()
 
+            # save info about downloaded video
+            self.save_video_info_into_file(url_to_video)
+
             tk.messagebox.showinfo(title="Pomyślnie pobrano!", message="Wideo zostało pobrane pomyślnie!")
-        except:
+        except Exception as e:
+            print(e)
             tk.messagebox.showerror(title="Wystąpił błąd", message="Coś poszło nie tak... Sprawdź poprawność linka.")
 
     def handle_settings(self, video):
@@ -125,3 +134,11 @@ class MainPanelPage(Page):
             ).first()
 
         return video
+
+    @staticmethod
+    def save_video_info_into_file(url_to_video):
+        video = YouTube(url_to_video)
+        print(video.title)
+        print(video.views)
+        print(video.length)
+        print(video.publish_date)

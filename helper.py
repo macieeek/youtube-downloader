@@ -23,12 +23,16 @@ class Helper:
         return os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
 
     @staticmethod
-    def get_settings_folder_path():
+    def get_appdata_project_folder_path():
         return f"{os.getenv('APPDATA')}/YoutubeDownloader"
 
     @staticmethod
     def get_settings_file_path():
-        return f"{os.getenv('APPDATA')}/YoutubeDownloader/settings.json"
+        return f"{Helper.get_appdata_project_folder_path()}/settings.json"
+
+    @staticmethod
+    def get_downloaded_videos_file_path():
+        return f"{Helper.get_appdata_project_folder_path()}/downloaded_videos.json"
 
     @staticmethod
     def check_internet_connection():
