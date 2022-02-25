@@ -2,7 +2,8 @@ import tkinter as tk
 from pages.main_panel_page import MainPanelPage
 from pages.settings_page import SettingsPage
 from pages.statistics_page import StatisticsPage
-from settings import Settings
+from files.settings import Settings
+from files.downloaded_videos import DownloadedVideos
 
 selected_tab = 1
 
@@ -11,7 +12,8 @@ class MainView(tk.Frame):
     def __init__(self, window):
         tk.Frame.__init__(self, window)
         self.settings = Settings()
-        self.main_panel_page = MainPanelPage(self.settings)
+        self.downloaded_files = DownloadedVideos()
+        self.main_panel_page = MainPanelPage(self.settings, self.downloaded_files)
         self.settings_page = SettingsPage(self.settings)
         self.statistics_page = StatisticsPage()
 

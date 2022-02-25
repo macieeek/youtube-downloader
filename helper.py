@@ -43,3 +43,35 @@ class Helper:
             return True
         except:
             return False
+
+    @staticmethod
+    def get_string_without_polish_characters(string):
+        string = string.replace("ą", "a")
+        string = string.replace("ć", "c")
+        string = string.replace("ę", "e")
+        string = string.replace("ł", "l")
+        string = string.replace("ń", "n")
+        string = string.replace("ó", "o")
+        string = string.replace("ś", "s")
+        string = string.replace("ź", "z")
+        string = string.replace("ż", "z")
+        return string
+
+    @staticmethod
+    def get_good_units_of_size(string):
+        string = string.replace("K", " tys.")
+        string = string.replace("M", " mln")
+        return string
+
+    @staticmethod
+    def get_simple_date_from_datetime(date):
+        date_tab = str(date).split(" ")
+        return date_tab[0]
+
+    @staticmethod
+    def get_good_looking_length(length):
+        minutes = length // 60
+        seconds = length % 60
+        if minutes == 0: return f"{seconds}s"
+
+        return f"{minutes}min {seconds}s"

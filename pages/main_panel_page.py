@@ -1,4 +1,5 @@
 import tkinter as tk
+from datetime import datetime
 from tkinter import messagebox
 from pages.page import Page
 from pytube import YouTube
@@ -6,10 +7,11 @@ from helper import Helper
 
 
 class MainPanelPage(Page):
-    def __init__(self, settings):
+    def __init__(self, settings_file, downloaded_files_file):
         Page.__init__(self)
         self.helper = Helper()
-        self.settings = settings
+        self.settings = settings_file
+        self.downloaded_files = downloaded_files_file
 
         self.show_content()
 
@@ -68,6 +70,10 @@ class MainPanelPage(Page):
         labelframe_last_downloaded_info_widget.place(x=265, y=185)
 
     def download_video(self):
+        self.save_downloaded_video_info_into_file(self.url_video_input.get())
+        return
+        #
+
         url_to_video = self.url_video_input.get()
         if len(url_to_video) < 12:
             return
@@ -99,7 +105,7 @@ class MainPanelPage(Page):
             self.update()
 
             # save info about downloaded video
-            self.save_video_info_into_file(url_to_video)
+            self.save_downloaded_video_info_into_file(url_to_video)
 
             tk.messagebox.showinfo(title="Pomyślnie pobrano!", message="Wideo zostało pobrane pomyślnie!")
         except Exception as e:
@@ -135,10 +141,20 @@ class MainPanelPage(Page):
 
         return video
 
-    @staticmethod
-    def save_video_info_into_file(url_to_video):
+    def save_downloaded_video_info_into_file(self, url_to_video):
         video = YouTube(url_to_video)
-        print(video.title)
-        print(video.views)
-        print(video.length)
-        print(video.publish_date)
+
+        current_datetime_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        likes_amount = video.initial_data['contents'] \
+            ['twoColumnWatchNextResults']['results']['results']['contents'][0]['videoPrimaryInfoRenderer'] \
+            ['videoActions']['menuRenderer']['topLevelButtons'][0]['toggleButtonRenderer']['defaultText']['simpleText']
+
+        downloaded_video_info = {
+            "title": self.helper.get_string_without_polish_characters(video.title),
+            "views": video.views,
+            "length": self.helper.get_good_looking_length(video.length),
+            "publish_date": self.helper.get_simple_date_from_datetime(video.publish_date),
+            "likes": self.helper.get_good_units_of_size(likes_amount),
+            "date": current_datetime_string
+        }
+        self.downloaded_files.save_new_downloaded_video_info(downloaded_video_info)
