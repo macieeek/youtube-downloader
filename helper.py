@@ -1,5 +1,6 @@
 import os
 import requests
+from datetime import datetime
 
 
 class Helper:
@@ -65,8 +66,11 @@ class Helper:
 
     @staticmethod
     def get_simple_date_from_datetime(date):
-        date_tab = str(date).split(" ")
-        return date_tab[0]
+        only_date = str(date).split(" ")[0]
+        d = datetime.strptime(only_date, "%Y-%m-%d")
+        return d.strftime("%d/%m/%Y")
+
+
 
     @staticmethod
     def get_good_looking_length(length):
