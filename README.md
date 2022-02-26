@@ -29,4 +29,9 @@ Run application
 # Application usage
 
 To successfully download video from YouTube you need to enter the URL of video and click download. 
-You can configure the specifications of downloaded videos in the settings tab.
+You can configure the specifications of videos in the settings tab.
+
+# Application appearance
+
+![](https://github.com/maciekiwaniuk/youtube-downloader/raw/main/assets/image_1.png?raw=true)
+![](https://github.com/maciekiwaniuk/youtube-downloader/raw/main/assets/image_2.png?raw=true)
