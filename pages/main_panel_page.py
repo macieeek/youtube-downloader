@@ -7,11 +7,11 @@ from helper import Helper
 
 
 class MainPanelPage(Page):
-    def __init__(self, settings_file, downloaded_files_file):
+    def __init__(self, settings_file, downloaded_videos_file):
         Page.__init__(self)
         self.helper = Helper()
         self.settings = settings_file
-        self.downloaded_files = downloaded_files_file
+        self.downloaded_videos = downloaded_videos_file
 
         self.show_content()
 
@@ -69,11 +69,33 @@ class MainPanelPage(Page):
         labelframe_last_downloaded_info_widget = tk.LabelFrame(self, text="Ostatnie pobranie", font=("Arial", 14), width=225, height=169)
         labelframe_last_downloaded_info_widget.place(x=265, y=185)
 
-    def download_video(self):
-        self.save_downloaded_video_info_into_file(self.url_video_input.get())
-        return
-        #
+        try:
+            test_key = list(self.downloaded_videos.get_downloaded_videos().keys())[-1]
+        except:
+            return
 
+        key_of_last_downloaded_video = list(self.downloaded_videos.get_downloaded_videos().keys())[-1]
+        last_downloaded_video_info_dict = self.downloaded_videos.get_downloaded_videos()[key_of_last_downloaded_video]
+
+        label_title = tk.Label(labelframe_last_downloaded_info_widget, text=f"Tytuł: {last_downloaded_video_info_dict['title'][:20]}", font=("Arial", 13))
+        label_title.place(x=3, y=5)
+
+        label_views = tk.Label(labelframe_last_downloaded_info_widget, text=f"Wyświetlenia: {last_downloaded_video_info_dict['views']}", font=("Arial", 13))
+        label_views.place(x=3, y=29)
+
+        label_likes = tk.Label(labelframe_last_downloaded_info_widget, text=f"Łapek w górę: {last_downloaded_video_info_dict['likes']}", font=("Arial", 13))
+        label_likes.place(x=3, y=51)
+
+        label_length = tk.Label(labelframe_last_downloaded_info_widget, text=f"Długość: {last_downloaded_video_info_dict['length']}", font=("Arial", 13))
+        label_length.place(x=3, y=73)
+
+        label_publish_date = tk.Label(labelframe_last_downloaded_info_widget, text=f"Data publikacji: {last_downloaded_video_info_dict['publish_date']}", font=("Arial", 13))
+        label_publish_date.place(x=3, y=95)
+
+        label_download_date = tk.Label(labelframe_last_downloaded_info_widget, text=f"Data pobrania: {last_downloaded_video_info_dict['download_date'][:10]}", font=("Arial", 13))
+        label_download_date.place(x=3, y=117)
+
+    def download_video(self):
         url_to_video = self.url_video_input.get()
         if len(url_to_video) < 12:
             return
@@ -106,6 +128,8 @@ class MainPanelPage(Page):
 
             # save info about downloaded video
             self.save_downloaded_video_info_into_file(url_to_video)
+            self.show()
+            self.update()
 
             tk.messagebox.showinfo(title="Pomyślnie pobrano!", message="Wideo zostało pobrane pomyślnie!")
         except Exception as e:
@@ -155,6 +179,6 @@ class MainPanelPage(Page):
             "length": self.helper.get_good_looking_length(video.length),
             "publish_date": self.helper.get_simple_date_from_datetime(video.publish_date),
             "likes": self.helper.get_good_units_of_size(likes_amount),
-            "date": current_datetime_string
+            "download_date": current_datetime_string
         }
-        self.downloaded_files.save_new_downloaded_video_info(downloaded_video_info)
+        self.downloaded_videos.save_new_downloaded_video_info(downloaded_video_info)

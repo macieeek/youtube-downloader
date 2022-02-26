@@ -7,30 +7,33 @@ class DownloadedVideos:
     def __init__(self):
         self.helper = Helper()
 
-    def get_downloaded_files(self):
-        self.check_if_downloaded_files_file_is_created()
+    def get_downloaded_videos(self):
+        self.check_if_downloaded_videos_file_is_created()
 
         return json.load(open(self.helper.get_downloaded_videos_file_path()))
 
-    def check_if_downloaded_files_file_is_created(self):
+    def check_if_downloaded_videos_file_is_created(self):
         if os.path.exists(self.helper.get_appdata_project_folder_path()) is False:
             folder = "YoutubeDownloader"
             create_path = os.path.join(os.getenv('APPDATA'), folder)
             os.mkdir(create_path)
 
         if os.path.exists(self.helper.get_appdata_project_folder_path()) and os.path.exists(self.helper.get_downloaded_videos_file_path()) is False:
-            print('test')
             filename = "downloaded_videos.json"
             with open(os.path.join(self.helper.get_appdata_project_folder_path(), filename), "w") as downloaded_videos_file:
-                self.create_default_downloaded_files_file(downloaded_videos_file)
+                self.create_default_downloaded_videos_file(downloaded_videos_file)
+
+        if os.stat(self.helper.get_downloaded_videos_file_path()).st_size == 0:
+            with open(self.helper.get_downloaded_videos_file_path(), "w") as downloaded_videos_file:
+                self.create_default_downloaded_videos_file(downloaded_videos_file)
 
     @staticmethod
-    def create_default_downloaded_files_file(downloaded_videos_file):
+    def create_default_downloaded_videos_file(downloaded_videos_file):
         data = {}
         downloaded_videos_file.write(json.dumps(data))
 
     def save_new_downloaded_video_info(self, video_info_dict):
-        self.check_if_downloaded_files_file_is_created()
+        self.check_if_downloaded_videos_file_is_created()
 
         index_of_downloaded_video = 0
         all_downloaded_videos_dict = {}
