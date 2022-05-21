@@ -22,6 +22,10 @@ Install all the required modules using pip
 
     pip install -r requirements.txt
 
+In case of any problems with pytube library I suggest to upgrade package to newest version
+
+    pip install --upgrade pytube
+
 Run application
 
     py main.py
