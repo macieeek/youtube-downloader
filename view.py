@@ -1,8 +1,8 @@
 import tkinter as tk
 from pages.main_panel_page import MainPanelPage
 from pages.settings_page import SettingsPage
-from files.settings import Settings
-from files.downloaded_videos import DownloadedVideos
+from file_handlers.settings import Settings
+from file_handlers.downloaded_videos import DownloadedVideos
 
 selected_tab = 1
 
