@@ -1,8 +1,8 @@
 # YouTube Downloader
 
-> ### Project of the dekstop application which allows to download videos or even just sound from YouTube.
+> ### Project of the desktop application which allows to download videos or even just sound from YouTube.
 
-- The whole application is made in [python](https://www.python.org/downloads/).
+- Application is made in [python](https://www.python.org/downloads/).
 - GUI is made with [tkinter](https://docs.python.org/3/library/tkinter.html).
 - To handle actions related with downloading video is used [pytube](https://pytube.io/en/latest/).
 
